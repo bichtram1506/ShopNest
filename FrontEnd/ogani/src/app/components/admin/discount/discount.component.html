@@ -1,0 +1,97 @@
+<p-toast></p-toast>
+<p-card>
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="Thêm ưu đãi" icon="pi pi-plus" class="p-button-success mr-2" (click)="showForm()"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-dialog header="Ưu đãi" [(visible)]="displayForm" [style]="{width: '30vw'}" [modal]="true" [transitionOptions]="'.3s'">
+        <form action="">
+            <div class="p-field">
+                <label for="code">Mã ưu đãi: </label>
+                <input type="text" pInputText class="w-full mt-2" [(ngModel)]="discountForm.code" name="code">
+            </div>
+            <div class="p-field">
+                <label for="name">Tên ưu đãi: </label>
+                <input type="text" pInputText class="w-full mt-2" [(ngModel)]="discountForm.name" name="name">
+            </div>
+            <div class="p-field">
+                <label for="description">Mô tả: </label>
+                <textarea pInputTextarea class="w-full mt-2" [(ngModel)]="discountForm.description" name="description"></textarea>
+            </div>
+            <div class="p-field">
+                <label for="usageCount">Số lần sử dụng: </label>
+                <input type="number" pInputText class="w-full mt-2" [(ngModel)]="discountForm.usageCount" name="usageCount">
+            </div>
+            <div class="p-field">
+                <label for="percentage">Phần trăm giảm giá: </label>
+                <input type="number" pInputText class="w-full mt-2" [(ngModel)]="discountForm.percentage" name="percentage">
+            </div>
+            <div class="p-field">
+                <label for="startDate">Ngày bắt đầu: </label>
+                <input type="date" pInputText class="w-full mt-2" [(ngModel)]="discountForm.startDate" name="startDate">
+            </div>
+            <div class="p-field">
+                <label for="endDate">Ngày kết thúc: </label>
+                <input type="date" pInputText class="w-full mt-2" [(ngModel)]="discountForm.endDate" name="endDate">
+            </div>
+            <div class="p-field">
+              <label for="status">Trạng thái: </label>
+              <select [(ngModel)]="discountForm.status" class="form-control">
+                  <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
+              </select>
+          </div>
+
+
+            <div class="p-field mt-3">
+                <button type="submit" pButton (click)="createDiscount()" *ngIf="!onUpdate">Tạo mới</button>
+                <button type="submit" pButton (click)="updateDiscount()" *ngIf="onUpdate">Cập nhật</button>
+                <button pButton type="button" class="p-button-danger ml-3" (click)="displayForm=false">Hủy</button>
+            </div>
+        </form>
+    </p-dialog>
+
+    <p-table [value]="listDiscount" [rows]="5" [paginator]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Mã ưu đãi</th>
+                <th>Tên ưu đãi</th>
+                <th>Mô tả</th>
+                <th>Số lần sử dụng</th>
+                <th>Phần trăm giảm giá</th>
+                <th>Ngày bắt đầu</th>
+                <th>Ngày kết thúc</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-discount>
+            <tr>
+                <td>{{discount.code}}</td>
+                <td>{{discount.name}}</td>
+                <td>{{discount.description}}</td>
+                <td>{{discount.usageCount}}</td>
+                <td>{{discount.percentage}}</td>
+                <td>{{discount.startDate}}</td>
+                <td>{{discount.endDate}}</td>
+                <td>{{discount.status}}</td>
+                <td>
+                    <button pButton type="button" icon="pi pi-pencil" class="p-button-rounded p-button-primary" (click)="onUpdateForm(discount.id, discount.code, discount.name, discount.description, discount.usageCount, discount.percentage, discount.startDate, discount.endDate, discount.status)"></button>
+                    <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger ml-2" (click)="onDelete(discount.id, discount.name)"></button>
+                    <p-dialog header="Xác nhận" [(visible)]="deleteForm" [style]="{width :'30vw'}" [modal]="true" [transitionOptions]="'.3s'">
+                        <div>
+                            <i class="pi pi pi-exclamation-triangle"></i>
+                            <span class="ml-2">Bạn có chắc xóa <span>{{discountForm.name}}</span> ?</span>
+                        </div>
+                        <div class="flex justify-content-end mt-3">
+                            <p-button label="Yes" icon="pi pi-check" class="mr-2" (click)="deleteDiscount()"></p-button>
+                            <p-button label="No" icon="pi pi-times" (click)="deleteForm=false"></p-button>
+                        </div>
+                    </p-dialog>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</p-card>
